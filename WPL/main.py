@@ -155,7 +155,7 @@ def displayFR():
         dtt.append(i[6].split(', ')[1])  #Venue
         dtt.append(i[4])  #Team A
         dtt.append(i[5])  #Team B
-        A, B = eval(i[8]), eval(i[9])
+        A, B = i[8], i[9]
         dtt.append(A) #TA_Scr
         dtt.append(B) #TB_Scr
         if i[10] is None:
