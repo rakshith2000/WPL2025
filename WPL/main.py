@@ -107,7 +107,7 @@ def displayPT():
     for i in dataPT:
         img = "/static/images/{}.png".format(i.team_name)
         dataFR = db.session.execute(
-    text('SELECT "Team_A", "Team_B", Result FROM Fixture WHERE "Team_A" = :team OR "Team_B" = :team'),
+    text('SELECT "Team_A", "Team_B", "Result" FROM Fixture WHERE "Team_A" = :team OR "Team_B" = :team'),
                                                 {'team': i.team_name}).fetchall()
         nm = '--'
         for j in dataFR:
@@ -251,7 +251,7 @@ def updatematch():
         if match_no.isdigit():
             A[1] = 20 if A[2] == 10 else A[1]
             B[1] = 20 if B[2] == 10 else B[1]
-            dataA = db.session.execute(text('SELECT team_name, P, W, L, Points, For, Against, Win_List FROM pointstable WHERE team_name = :team_name'),{'team_name': str(a)}).fetchall()
+            dataA = db.session.execute(text('SELECT team_name, "P", "W", "L", "Points", "For", "Against", "Win_List" FROM pointstable WHERE team_name = :team_name'),{'team_name': str(a)}).fetchall()
             for i in dataA:
                 if i[0] == wt:
                     P, W, L, Points = 1 + i[1], 1 + i[2], 0 + i[3], i[4] + 2
@@ -274,7 +274,7 @@ def updatematch():
             PT.Against = {"runs": againstRuns, "overs": againstOvers}
             db.session.commit()
 
-            dataB = db.session.execute(text('SELECT team_name, P, W, L, Points, For, Against, Win_List FROM pointstable WHERE team_name = :team_name'),{'team_name': str(b)}).fetchall()
+            dataB = db.session.execute(text('SELECT team_name, "P", "W", "L", "Points", "For", "Against", "Win_List" FROM pointstable WHERE team_name = :team_name'),{'team_name': str(b)}).fetchall()
             for i in dataB:
                 if i[0] == wt:
                     P, W, L, Points = 1 + i[1], 1 + i[2], 0 + i[3], i[4] + 2
@@ -318,7 +318,7 @@ def deletematch():
     if request.method == "POST" and hint == 'after':
         dmatch = request.form.get('dmatch')
         if dmatch.isdigit():
-            FR = db.session.execute(text('SELECT Team_A, Team_B, A_info, B_info, Win_T FROM fixture WHERE Match_No = :match_no'),{'match_no': dmatch}).fetchall()
+            FR = db.session.execute(text('SELECT "Team_A", "Team_B", "A_info", "B_info", "Win_T" FROM fixture WHERE "Match_No" = :match_no'),{'match_no': dmatch}).fetchall()
             for i in FR:
                 A = list(eval(i[2]).values())
                 B = list(eval(i[3]).values())
@@ -329,7 +329,7 @@ def deletematch():
             A[1] = 20 if A[2] == 10 else A[1]
             B[1] = 20 if B[2] == 10 else B[1]
 
-            dataA = db.session.execute(text('SELECT team_name, P, W, L, Points, "For", "Against", Win_List FROM pointstable WHERE team_name = :team_name'),{'team_name': str(a)}).fetchall()
+            dataA = db.session.execute(text('SELECT team_name, "P", "W", "L", "Points", "For", "Against", "Win_List" FROM pointstable WHERE team_name = :team_name'),{'team_name': str(a)}).fetchall()
 
             for i in dataA:
                 if i[0] == wt:
@@ -357,7 +357,7 @@ def deletematch():
             db.session.commit()
 
 
-            dataB = db.session.execute(text('SELECT team_name, P, W, L, Points, "For", "Against", Win_List FROM pointstable WHERE team_name = :team_name'),{'team_name': str(b)}).fetchall()
+            dataB = db.session.execute(text('SELECT team_name, "P", "W", "L", "Points", "For", "Against", "Win_List" FROM pointstable WHERE team_name = :team_name'),{'team_name': str(b)}).fetchall()
             for i in dataB:
                 if i[0] == wt:
                     P, W, L, Points = i[1] - 1, i[2] - 1, i[3] - 0, i[4] - 2
