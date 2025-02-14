@@ -188,18 +188,20 @@ def squad_details(team, name):
     sq = Squad.query.filter_by(Name=name).first()
     return render_template('squad_details.html', sq=sq, clr=clr[team], team=team)
 
+#@main.route('/liveScore')
+#def liveScore():
+#    current_date = date.today()
+#    TodayFR = db.session.execute(text('SELECT * FROM Fixture WHERE date = :current_date'),{'current_date': current_date}).fetchall()
+#    print(TodayFR)
+#    print(len(TodayFR))
+#    if len(TodayFR) != 0:
+#        return render_template('no_live_match.html')
+#    else:
+#        return render_template('live.html')
+
 @main.route('/liveScore')
 def liveScore():
-    current_date = date.today()
-    TodayFR = db.session.execute(text('SELECT * FROM Fixture WHERE date = :current_date'),{'current_date': current_date}).fetchall()
-    print(TodayFR)
-    print(len(TodayFR))
-    if len(TodayFR) != 0:
-        return render_template('no_live_match.html')
-    else:
-        return render_template('live.html')
-
-
+    return render_template('maintenance.html')
 
 @main.route('/update')
 @login_required
