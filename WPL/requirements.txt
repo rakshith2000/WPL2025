@@ -1,0 +1,6 @@
+Flask
+Flask_Login
+flask_sqlalchemy
+Werkzeug
+requests
+gunicorn
