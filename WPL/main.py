@@ -225,7 +225,7 @@ def updatematch():
     key = 1
     if request.method == "POST" and hint == 'before':
         match = str(request.form.get('match')).upper()
-        match = int(match) if match.isdigit() else pofs[match]
+        match = str(match) if match.isdigit() else pofs[match]
         FR = Fixture.query.filter_by(Match_No=match).first()
         if match not in [i for i in range(1,21)]+list(pofs.values()):
             flash('Invalid Match number to update', category='error')
@@ -307,7 +307,7 @@ def deletematch():
     key = 2
     if request.method == "POST" and hint == 'before':
         dmatch = str(request.form.get('dmatch')).upper()
-        dmatch = int(dmatch) if dmatch.isdigit() else pofs[dmatch]
+        dmatch = str(dmatch) if dmatch.isdigit() else pofs[dmatch]
         FR = Fixture.query.filter_by(Match_No=dmatch).first()
         if dmatch not in [i for i in range(1, 21)] + list(pofs.values()):
             flash('Invalid Match number to delete', category='error')
