@@ -60,6 +60,7 @@ def ovToPer(n):
 
 @main.route('/')
 def index():
+    print(db.session.execute(text('select count(*) from user')).scalar())
     if db.session.execute(text('select count(*) from user')).scalar() == 0:
         user = User(email='adminwpl2025@gmail.com', \
                     password=generate_password_hash('Admin@wpl2025', method='pbkdf2:sha256', salt_length=8), \
