@@ -1,7 +1,7 @@
 from datetime import datetime, date, timedelta
 from . import db
 from .models import User, Pointstable, Fixture, Squad
-import os, csv, re
+import os, csv, re, pytz
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Blueprint, render_template, url_for, redirect, request, flash
 from flask_login import login_required, current_user
@@ -9,6 +9,8 @@ from sqlalchemy import and_, or_
 from sqlalchemy.sql import text
 
 main = Blueprint('main', __name__)
+
+tz = pytz.timezone('Asia/Kolkata')
 
 pofs = {'E':'Eliminator', 'F':'Final'}
 
@@ -170,7 +172,9 @@ def displayFR():
         dt.append(dtt)
     for j in dt:
         print(j)
-    return render_template('displayFR.html', FR=dt, hint=hint, fn=full_name, current_date=datetime.now(), clr=clr)
+    current_date = datetime.now(tz)
+    current_date = current_date.replace(tzinfo=None)
+    return render_template('displayFR.html', FR=dt, hint=hint, fn=full_name, current_date=current_date, clr=clr)
 
 @main.route('/teams')
 def teams():
