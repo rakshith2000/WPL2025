@@ -18,6 +18,7 @@ def login_post():
     password = request.form.get('password')
     remember = True if request.form.get('remember') else False
     user = User.query.filter_by(email=email).first()
+    print(user)
     if not user or not check_password_hash(user.password, password):
         return redirect(url_for('auth.login'))
 
