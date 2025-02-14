@@ -107,7 +107,7 @@ def displayPT():
     for i in dataPT:
         img = "/static/images/{}.png".format(i.team_name)
         dataFR = db.session.execute(
-    text('SELECT Team_A, Team_B, Result FROM Fixture WHERE Team_A = :team OR Team_B = :team'),
+    text('SELECT "Team_A", "Team_B", Result FROM Fixture WHERE "Team_A" = :team OR "Team_B" = :team'),
                                                 {'team': i.team_name}).fetchall()
         nm = '--'
         for j in dataFR:
@@ -142,7 +142,7 @@ def displayFR():
             #Fixture.query.all()
         hint = 'All'
     else:
-        dataFR = db.session.execute(text('SELECT * FROM Fixture WHERE Team_A = :team OR Team_B = :team'),{'team': team}).fetchall()
+        dataFR = db.session.execute(text('SELECT * FROM Fixture WHERE "Team_A" = :team OR "Team_B" = :team'),{'team': team}).fetchall()
             #Fixture.query.filter_by(or_(Fixture.Team_A == team, Fixture.Team_B == team)).all()
         hint = team
     dt = [['Match No', 'Date', 'Venue', 'Team-A', 'Team-B', 'TA-Score', 'TB-Score', 'WT', 'WType', 'WBy']]
