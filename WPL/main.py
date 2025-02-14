@@ -149,8 +149,8 @@ def displayFR():
     for i in dataFR:
         dtt = []
         dtt.append(i[1]) #Match No
-        dttm = datetime.strptime(i[2],'%Y-%m-%d').strftime('%Y-%m-%d')+' '+ \
-                     datetime.strptime(i[3][:-7],'%H:%M:%S').strftime('%H:%M:%S')
+        dttm = i[2].strftime('%Y-%m-%d')+' '+ \
+                     i[3][:-7].strftime('%H:%M:%S')
         dtt.append(datetime.strptime(dttm, '%Y-%m-%d %H:%M:%S'))  #DateTime
         dtt.append(i[6].split(', ')[1])  #Venue
         dtt.append(i[4])  #Team A
