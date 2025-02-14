@@ -60,13 +60,13 @@ def ovToPer(n):
 
 @main.route('/')
 def index():
-    if db.session.execute(text('select count() from user')).scalar() == 0:
+    if db.session.execute(text('select count(*) from user')).scalar() == 0:
         user = User(email='adminwpl2025@gmail.com', \
                     password=generate_password_hash('Admin@wpl2025', method='pbkdf2:sha256', salt_length=8), \
                     name='AdminWPL2025')
         db.session.add(user)
         db.session.commit()
-    if db.session.execute(text('select count() from pointstable')).scalar() == 0:
+    if db.session.execute(text('select count(*) from pointstable')).scalar() == 0:
         teams = ['DCW', 'GG', 'MIW', 'RCBW', 'UPW']
         inter = os.getcwd()
         for i in teams:
@@ -76,7 +76,7 @@ def index():
                 For={'runs':0, 'overs':0.0}, Against={'runs':0, 'overs':0.0})
             db.session.add(tm)
             db.session.commit()
-    if db.session.execute(text('select count() from fixture')).scalar() == 0:
+    if db.session.execute(text('select count(*) from fixture')).scalar() == 0:
         df = open('WPL/WPL2025.csv', 'r')
         df = list(csv.reader(df))
         for i in df[1:]:
@@ -87,7 +87,7 @@ def index():
                                     B_info={'runs':0, 'overs':0.0, 'wkts':0})
             db.session.add(mt)
             db.session.commit()
-    if db.session.execute(text('select count() from squad')).scalar() == 0:
+    if db.session.execute(text('select count(*) from squad')).scalar() == 0:
         df = open('WPL/all teams squad wpl.csv', 'r')
         df = list(csv.reader(df))
         for i in df[1:]:
