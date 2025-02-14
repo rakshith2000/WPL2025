@@ -1,0 +1,12 @@
+name: Run Cron Job
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"  # This means every 5 minutes
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping My App
+        run: curl -X GET https://tatawpl2025.onrender.com
