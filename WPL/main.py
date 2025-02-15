@@ -204,9 +204,36 @@ def squad_details(team, name):
 #    else:
 #        return render_template('live.html')
 
+#@main.route('/liveScore')
+#def liveScore():
+#    return render_template('maintenance.html')
+
+API_URL = 'https://cmc2.sportskeeda.com/live-cricket-score/victoria-lions-vs-southern-crusaders-cc-29th-match-15-february-2025/ajax'
+
+def fetch_live_score():
+    try:
+        # Fetch the live score JSON from the API URL
+        response = requests.get(API_URL)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {"error": "Failed to fetch live score"}
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.route('/live_cricket_score')
+def live_cricket_score():
+    def stream():
+        while True:
+            data = fetch_live_score()
+            yield f"data: {json.dumps(data)}\n\n"
+            time.sleep(5)
+
+    return Response(stream(), mimetype='text/event-stream')
+
 @main.route('/liveScore')
 def liveScore():
-    return render_template('maintenance.html')
+    return render_template('scorecard-1.html')
 
 @main.route('/update')
 @login_required
