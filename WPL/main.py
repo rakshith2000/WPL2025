@@ -108,7 +108,7 @@ def displayPT():
     for i in dataPT:
         img = "/static/images/{}.png".format(i.team_name)
         dataFR = db.session.execute(
-    text('SELECT "Team_A", "Team_B", "Result" FROM Fixture WHERE "Team_A" = :team OR "Team_B" = :team'),
+    text('SELECT "Team_A", "Team_B", "Result" FROM Fixture WHERE "Team_A" = :team OR "Team_B" = :team order by id'),
                                                 {'team': i.team_name}).fetchall()
         nm = '--'
         for j in dataFR:
