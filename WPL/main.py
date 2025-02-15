@@ -3,7 +3,7 @@ from . import db
 from .models import User, Pointstable, Fixture, Squad
 import os, csv, re, pytz, requests, time
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import Blueprint, render_template, url_for, redirect, request, flash, Response, json
+from flask import Blueprint, render_template, url_for, redirect, request, flash, Response, json, stream_with_context
 from flask_login import login_required, current_user
 from sqlalchemy import and_, or_
 from sqlalchemy.sql import text
@@ -225,11 +225,14 @@ def fetch_live_score():
 def live_cricket_score():
     def stream():
         while True:
+            if request.environ.get('wsgi.input').closed:
+                print("Client disconnected")
+                break
             data = fetch_live_score()
             yield f"data: {json.dumps(data)}\n\n"
             time.sleep(5)
 
-    return Response(stream(), mimetype='text/event-stream')
+    return Response(stream_with_context(stream()), mimetype='text/event-stream')
 
 @main.route('/liveScore')
 def liveScore():
