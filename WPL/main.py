@@ -221,7 +221,7 @@ def fetch_live_score():
     except Exception as e:
         return {"error": str(e)}
 
-@app.route('/live_cricket_score')
+@main.route('/live_cricket_score')
 def live_cricket_score():
     def stream():
         while True:
