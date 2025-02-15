@@ -139,11 +139,11 @@ def displayPT():
 def displayFR():
     team = request.args.get('team','All',type=str)
     if team == 'All':
-        dataFR = db.session.execute(text('select * from Fixture'))\
+        dataFR = db.session.execute(text('select * from Fixture order by id'))\
             #Fixture.query.all()
         hint = 'All'
     else:
-        dataFR = db.session.execute(text('SELECT * FROM Fixture WHERE "Team_A" = :team OR "Team_B" = :team'),{'team': team}).fetchall()
+        dataFR = db.session.execute(text('SELECT * FROM Fixture WHERE "Team_A" = :team OR "Team_B" = :team order by id'),{'team': team}).fetchall()
             #Fixture.query.filter_by(or_(Fixture.Team_A == team, Fixture.Team_B == team)).all()
         hint = team
     dt = [['Match No', 'Date', 'Venue', 'Team-A', 'Team-B', 'TA-Score', 'TB-Score', 'WT', 'WType', 'WBy']]
