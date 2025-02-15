@@ -2,7 +2,7 @@ name: Run Cron Job
 
 on:
   schedule:
-    - cron: "*/5 * * * *"  # This means every 5 minutes
+    - cron: "*/2 * * * *"  # This means every 5 minutes
 
 jobs:
   ping:
