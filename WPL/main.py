@@ -265,7 +265,7 @@ def updatematch():
                     wl[int(match_no)] = 'L'
                     wl = dict(sorted(wl.items()))
                 forRuns = i[5]['runs'] + A[0]
-                forOvers = oversAdd((i[5]['overs'], A[1])
+                forOvers = oversAdd(i[5]['overs'], A[1])
                 againstRuns = i[6]['runs'] + B[0]
                 againstOvers = oversAdd(i[6]['overs'], B[1])
                 NRR = round((forRuns / ovToPer(forOvers) - againstRuns / ovToPer(againstOvers)), 3)
@@ -287,10 +287,10 @@ def updatematch():
                     wl = eval(i[7])
                     wl[int(match_no)] = 'L'
                     wl = dict(sorted(wl.items()))
-                forRuns = eval(i[5])['runs'] + B[0]
-                forOvers = oversAdd(eval(i[5])['overs'], B[1])
-                againstRuns = eval(i[6])['runs'] + A[0]
-                againstOvers = oversAdd(eval(i[6])['overs'], A[1])
+                forRuns = i[5]['runs'] + B[0]
+                forOvers = oversAdd(i[5]'overs'], B[1])
+                againstRuns = i[6]['runs'] + A[0]
+                againstOvers = oversAdd(i[6]['overs'], A[1])
                 NRR = round((forRuns / ovToPer(forOvers) - againstRuns / ovToPer(againstOvers)), 3)
             PT = Pointstable.query.filter_by(team_name=str(b)).first()
             PT.P, PT.W, PT.L, PT.Points, PT.NRR, PT.Win_List = P, W, L, Points, NRR, str(wl)
@@ -343,10 +343,10 @@ def deletematch():
                     wl = eval(i[7])
                     del wl[int(dmatch)]
                     wl = dict(sorted(wl.items()))
-                forRuns = eval(i[5])['runs'] - A[0]
-                forOvers = oversSub(eval(i[5])['overs'], A[1])
-                againstRuns = eval(i[6])['runs'] - B[0]
-                againstOvers = oversSub(eval(i[6])['overs'], B[1])
+                forRuns = i[5]['runs'] - A[0]
+                forOvers = oversSub(i[5]['overs'], A[1])
+                againstRuns = i[6]['runs'] - B[0]
+                againstOvers = oversSub(i[6]['overs'], B[1])
                 if ovToPer(forOvers) == 0 or ovToPer(againstOvers) == 0:
                     NRR = 0.0
                 else:
@@ -370,10 +370,10 @@ def deletematch():
                     wl = eval(i[7])
                     del wl[int(dmatch)]
                     wl = dict(sorted(wl.items()))
-                forRuns = eval(i[5])['runs'] - B[0]
-                forOvers = oversSub(eval(i[5])['overs'], B[1])
-                againstRuns = eval(i[6])['runs'] - A[0]
-                againstOvers = oversSub(eval(i[6])['overs'], A[1])
+                forRuns = i[5]['runs'] - B[0]
+                forOvers = oversSub(i[5]['overs'], B[1])
+                againstRuns = i[6]['runs'] - A[0]
+                againstOvers = oversSub(i[6]['overs'], A[1])
                 if ovToPer(forOvers) == 0 or ovToPer(againstOvers) == 0:
                     NRR = 0.0
                 else:
