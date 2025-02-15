@@ -288,7 +288,7 @@ def updatematch():
                     wl[int(match_no)] = 'L'
                     wl = dict(sorted(wl.items()))
                 forRuns = i[5]['runs'] + B[0]
-                forOvers = oversAdd(i[5]'overs'], B[1])
+                forOvers = oversAdd(i[5]['overs'], B[1])
                 againstRuns = i[6]['runs'] + A[0]
                 againstOvers = oversAdd(i[6]['overs'], A[1])
                 NRR = round((forRuns / ovToPer(forOvers) - againstRuns / ovToPer(againstOvers)), 3)
