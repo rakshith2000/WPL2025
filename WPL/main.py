@@ -210,7 +210,7 @@ def liveScore():
 
 #API_URL = 'https://cmc2.sportskeeda.com/live-cricket-score/victoria-lions-vs-southern-crusaders-cc-29th-match-15-february-2025/ajax'
 
-def fetch_live_score():
+'''def fetch_live_score():
     try:
         # Fetch the live score JSON from the API URL
         response = requests.get(API_URL)
@@ -219,7 +219,7 @@ def fetch_live_score():
         else:
             return {"error": "Failed to fetch live score"}
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": str(e)}'''
 
 #@main.route('/live_cricket_score')
 #def live_cricket_score():
