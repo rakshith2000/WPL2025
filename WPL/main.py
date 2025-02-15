@@ -101,7 +101,7 @@ def index():
 
 @main.route('/pointstable')
 def displayPT():
-    dataPT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.NRR.desc()).all()
+    dataPT = Pointstable.query.order_by(Pointstable.Points.desc(),Pointstable.NRR.desc(),Pointstable.ID.asc()).all()
     dt = [['#', 'Logo', 'Teams', 'P', 'W', 'L', 'NR', 'Points', 'NRR', 'Last 5', 'Next Match'], [i for i in range(1,11)],\
          [], [], [], [], [], [], [], [], [], []]
     teams_ABV = []
