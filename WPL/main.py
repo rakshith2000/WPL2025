@@ -1,7 +1,7 @@
 from datetime import datetime, date, timedelta
 from . import db
 from .models import User, Pointstable, Fixture, Squad
-import os, csv, re, pytz
+import os, csv, re, pytz, requests
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Blueprint, render_template, url_for, redirect, request, flash
 from flask_login import login_required, current_user
