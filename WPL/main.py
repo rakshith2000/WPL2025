@@ -225,8 +225,8 @@ def updatematch():
     key = 1
     if request.method == "POST" and hint == 'before':
         match = str(request.form.get('match')).upper()
-        match = str(match) if match.isdigit() else pofs[match]
-        FR = Fixture.query.filter_by(Match_No=match).first()
+        match = int(match) if match.isdigit() else pofs[match]
+        FR = Fixture.query.filter_by(Match_No=str(match)).first()
         if match not in [i for i in range(1,21)]+list(pofs.values()):
             flash('Invalid Match number to update', category='error')
             return redirect(url_for('main.update', key=key))
@@ -264,10 +264,10 @@ def updatematch():
                     wl = eval(i[7])
                     wl[int(match_no)] = 'L'
                     wl = dict(sorted(wl.items()))
-                forRuns = eval(i[5])['runs'] + A[0]
-                forOvers = oversAdd(eval(i[5])['overs'], A[1])
-                againstRuns = eval(i[6])['runs'] + B[0]
-                againstOvers = oversAdd(eval(i[6])['overs'], B[1])
+                forRuns = i[5]['runs'] + A[0]
+                forOvers = oversAdd((i[5]['overs'], A[1])
+                againstRuns = i[6]['runs'] + B[0]
+                againstOvers = oversAdd(i[6]['overs'], B[1])
                 NRR = round((forRuns / ovToPer(forOvers) - againstRuns / ovToPer(againstOvers)), 3)
             PT = Pointstable.query.filter_by(team_name=str(a)).first()
             PT.P, PT.W, PT.L, PT.Points, PT.NRR, PT.Win_List = P, W, L, Points, NRR, str(wl)
@@ -307,8 +307,8 @@ def deletematch():
     key = 2
     if request.method == "POST" and hint == 'before':
         dmatch = str(request.form.get('dmatch')).upper()
-        dmatch = str(dmatch) if dmatch.isdigit() else pofs[dmatch]
-        FR = Fixture.query.filter_by(Match_No=dmatch).first()
+        dmatch = int(dmatch) if dmatch.isdigit() else pofs[dmatch]
+        FR = Fixture.query.filter_by(Match_No=str(dmatch)).first()
         if dmatch not in [i for i in range(1, 21)] + list(pofs.values()):
             flash('Invalid Match number to delete', category='error')
             return redirect(url_for('main.update', key=key))
