@@ -1,8 +1,9 @@
 from flask import Flask
+from flask_apscheduler import APScheduler
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
+import os, requests
 
 db = SQLAlchemy()
 
@@ -30,6 +31,18 @@ def create_app():
     app.register_blueprint(auth_blueprint)
 
     from . import models
+    scheduler = APScheduler()
+    scheduler.init_app(app)
+    scheduler.start()
+
+    @scheduler.task('interval', id='ping_task', seconds=600, misfire_grace_time=120)
+    def ping():
+        try:
+            # Replace with your app's URL
+            response = requests.get('https://tatawpl2025.onrender.com/login')
+            print(f"Ping successful, status code: {response.status_code}")
+        except Exception as e:
+            print(f"Error pinging app: {e}")
     #
     with app.app_context():
         db.create_all()
