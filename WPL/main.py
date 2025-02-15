@@ -321,10 +321,10 @@ def deletematch():
         if dmatch.isdigit():
             FR = db.session.execute(text('SELECT "Team_A", "Team_B", "A_info", "B_info", "Win_T" FROM fixture WHERE "Match_No" = :match_no'),{'match_no': dmatch}).fetchall()
             for i in FR:
-                A = list(eval(i[2]).values())
-                B = list(eval(i[3]).values())
-                A = [int(A[0]), float(A[1]), int(A[2])]
-                B = [int(B[0]), float(B[1]), int(B[2])]
+                A = list(i[2].values())
+                B = list(i[3].values())
+                #A = [int(A[0]), float(A[1]), int(A[2])]
+                #B = [int(B[0]), float(B[1]), int(B[2])]
                 wt = i[4]
                 a, b = i[0], i[1]
             A[1] = 20 if A[2] == 10 else A[1]
