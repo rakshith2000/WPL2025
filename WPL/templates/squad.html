@@ -247,7 +247,16 @@ body {
   <center><div class="grad3"><b>Batters</b></div><br></center>
   <div class="flex-container">
     {% for i in sq %}
-    {% if (i.Role == 'Batter' or i.Role == 'Wicket Keeper') %}
+    {% if (i.Role == 'Batter') %}
+    {{ display(i) }}
+    {% endif %}
+    {% endfor %}
+  </div>
+
+<center><div class="grad3"><b>Wicket Keepers</b></div><br></center>
+  <div class="flex-container">
+    {% for i in sq %}
+    {% if (i.Role == 'Wicket Keeper') %}
     {{ display(i) }}
     {% endif %}
     {% endfor %}
