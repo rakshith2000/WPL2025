@@ -169,7 +169,7 @@ def displayFR():
             dtt.append(WType)
             WBy = re.findall(r'\d+', i[7])[0]
             dtt.append(str(WBy))
-        dtt.append(i[7][i[7].index('won'):])
+            dtt.append(i[7][i[7].index('won'):])
         dt.append(dtt)
     for j in dt:
         print(j)
