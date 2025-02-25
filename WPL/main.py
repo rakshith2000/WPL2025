@@ -146,7 +146,7 @@ def displayFR():
         dataFR = db.session.execute(text('SELECT * FROM Fixture WHERE "Team_A" = :team OR "Team_B" = :team order by id'),{'team': team}).fetchall()
             #Fixture.query.filter_by(or_(Fixture.Team_A == team, Fixture.Team_B == team)).all()
         hint = team
-    dt = [['Match No', 'Date', 'Venue', 'Team-A', 'Team-B', 'TA-Score', 'TB-Score', 'WT', 'WType', 'WBy']]
+    dt = [['Match No', 'Date', 'Venue', 'Team-A', 'Team-B', 'TA-Score', 'TB-Score', 'WT', 'WType', 'WBy', 'Result']]
     for i in dataFR:
         dtt = []
         dtt.append(i[1]) #Match No
@@ -169,7 +169,7 @@ def displayFR():
             dtt.append(WType)
             WBy = re.findall(r'\d+', i[7])[0]
             dtt.append(str(WBy))
-        
+        dtt.append(i[7])
         dt.append(dtt)
     for j in dt:
         print(j)
