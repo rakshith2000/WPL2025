@@ -168,7 +168,7 @@
         <div class="score" style="color: {{ TBclr }}">{{ TB_S['runs'] }}-{{ TB_S['wkts'] }} ({{ TB_S['overs'] }})</div>
       </div>
   </div>
-      <div class="result"><span class="team-name" full="{{ fn[i[7]] }}" short="{{ i[7] }}">{{ fn[i[7]] }}</span> won by {{ i[9] }} {{ i[8] }}</div>
+      <div class="result"><span class="team-name" full="{{ fn[i[7]] }}" short="{{ i[7] }}">{{ fn[i[7]] }}</span> {{ i[10] }}</div>
       </div>
   <div class="timer-card">
     <div class="header" style="text-align: center;">Match Completed</div>
@@ -177,7 +177,7 @@
 		<img class="vs-image" src="\static\images\vs.png" alt="Team Logo" />
 		<img class="team-image" style="--c1: {{ clr[i[4]]['c1'] }}; --c2: {{ clr[i[4]]['c2'] }};" src="\static\images\squad_logos\{{ i[4] }}.webp" alt="Team Logo" />
 </div>
-      <div class="result" style="width: 80%;">{{ fn[i[7]] }} won by {{ i[9] }} {{ i[8] }}</div>
+      <div class="result" style="width: 80%;">{{ fn[i[7]] }} {{ i[10] }}</div>
   </div>
   </div>
 {% endif %}
