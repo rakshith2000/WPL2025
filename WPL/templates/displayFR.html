@@ -136,6 +136,7 @@
   <div class="score-card">
     <div class="header">{{ i[1].strftime('%a, %d %b %Y') }}</div>
     <div class="match-info">{% if i[0] | int(default=None) is not none%}{{ num_suffix(i[0] | int) ~ " " ~ "Match" }}{% else %}{{ i[0] }}{% endif %} &bull; {{ i[2] }}</div>
+      {% if 'Super over' not in i[10] %}
       {% if i[7] == i[3] and i[8] == "runs" %}
       {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
       {% elif i[7] == i[3] and i[8] == "wickets" %}
@@ -145,6 +146,17 @@
       {% else %}
       {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
       {% endif %}
+    {% else %}
+      {% if i[7] == i[3] and i[8] == "runs" %}
+      {% set TA, TB, TA_S, TB_S = i[4], i[3], i[6], i[5] %}
+      {% elif i[7] == i[3] and i[8] == "wickets" %}
+      {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
+      {% elif i[7] == i[4] and i[8] == "runs" %}
+      {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
+      {% else %}
+      {% set TA, TB, TA_S, TB_S = i[4], i[3], i[6], i[5] %}
+      {% endif %}
+    {% endif %}
 
       <!-- Team A -->
       {% if TA == i[7] %}{% set TAclr = '#000000'%}{% else %}{% set TAclr = '#7f7f7f'%}{% endif %}
