@@ -11,10 +11,29 @@
 	<link href="{{ url_for('static', filename= 'css/live.css') }}" rel="stylesheet">
    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 	<link href="{{ url_for('static', filename= 'css/flag-icons.css') }}" rel="stylesheet">
+    <style>
+    body {
+        background-image: url('/static/images/banner_bg.jpg');
+        background-size: cover;
+        background-attachment: fixed;
+    }
+    </style>
 {% endblock %}
 
 {% block content %}
-
+{% macro num_suffix(n) %}
+    {% if n % 100 in [11, 12, 13] %}
+        {{ n }}th
+    {% elif n % 10 == 1 %}
+        {{ n }}st
+    {% elif n % 10 == 2 %}
+        {{ n }}nd
+    {% elif n % 10 == 3 %}
+        {{ n }}rd
+    {% else %}
+        {{ n }}th
+    {% endif %}
+{% endmacro %}
 
 <section id="center" class="pt-3 pb-3 center_live">
  <div class="container-xl">
@@ -22,35 +41,39 @@
    <div class="row schedule2">
     <div class="col-md-9">
 	  <div class="live">
-	    <div class="live_1">
-	     <b class="font_14">England vs Sri Lanka, 2nd Test at London, ENG v SL, Aug 29 2024 - Live Cricket Score</b>
-	    </div>
-		 <div class="live_2 border rounded_10 bg-white mt-2">
+		 <div class="live_2 rounded_10 border mt-2" style="background-color: #00816a">
            <div class="live_2_inner row px-3 pt-2 pb-2">
 		     <div class="col-md-8">
 			  <div class="live_2_inner_left">
-			    <b class="text-danger font_18">&bull;&nbsp;LIVE</b>
-				<span class="d-block font_14">2nd Test, Lord's, August 29 - September 02, 2024,  <a href="#">Sri Lanka tour of England</a></span>
+			    <b class="text-white" style="font-size: 20px">{{ dt1[4] }} vs {{ dt1[5] }}</b>
+				<span class="d-block font_14 text-white">{{ dt2[0] }}, {{ dt2[1] }}, {{ dt2[2] }}, Women's Premier League 2025</span>
 			  </div>
 			 </div>
 		   </div>
-		   <hr class="mt-2 mb-0">
-		   <span class="px-3 d-block pt-3 mb-2"><a class="fw-bold fs-6" href="#"><span class="fi fi-bd me-1" style="width:18px; height:14px;"></span> BAN</a> <span class="float-end font_14">(34 ov) <b class="fs-6">427 & 159/4</b></span></span>
-		   <span class="px-3 d-block"><a class="fw-bold fs-6" href="#"><span class="fi fi-pk me-1" style="width:18px; height:14px;"></span> PAK</a> <span class="float-end font_14"> <b class="fs-6">234</b></span></span>
-		   <span class="font_12 d-block mt-2 px-3">Day 3 - Session 1: England lead by 390 runs.</span>
-		   <span class="d-block mt-2 pt-2 pb-2 px-3 font_12 bg-light">Current RR: 4.67
- • Min. Ov. Rem: 63
- • Last 10 ov (RR): 55/1 (5.50)</span>
-        <ul class="mb-0 bg-white mx-3 mt-2 score_tab d-block">
-		 <li class="d-inline-block"><a class="active d-block" href="live.html">Live</a></li>
-		 <li class="mx-2 d-inline-block"><a class="d-block" href="scorecard.html">Scorecard</a></li>
+		   <span class="bg-white px-3 d-block pt-2"><span class="fi fi-{{ tid[dt3['score_strip'][0].team_id][0] | lower }} me-1"></span> <b>{{ tid[dt3['score_strip'][0].team_id][0] }}</b> <span class="float-end font_14">{% if dt3['score_strip'][0].score %}<b class="fs-6">{{ dt3['score_strip'][0].score.split(' (')[0] }}</b>{{ ' ('~dt3['score_strip'][0].score.split(' (')[1].replace(' ov', '') }}{% else %}{{ 'Yet to Bat' }}{% endif %}</span></span>
+		   <span class="bg-white px-3 d-block pt-2"><span class="fi fi-{{ tid[dt3['score_strip'][1].team_id][0] | lower }} me-1"></span> <b>{{ tid[dt3['score_strip'][1].team_id][0] }}</b> <span class="float-end font_14">{% if dt3['score_strip'][1].score %}<b class="fs-6">{{ dt3['score_strip'][1].score.split(' (')[0] }}</b>{{ ' ('~dt3['score_strip'][1].score.split(' (')[1].replace(' ov', '') }}{% else %}{{ 'Yet to Bat' }}{% endif %}</span></span>
+		    {% if dt3['info'] == "" %}{% set fc = 'text-orange' %}{% elif 'won' in dt3['info'] %}{% set fc = 'text-blue' %}{% else %}{% set fc = 'text-danger' %}{% endif %}
+            <span class="bg-white font_14 d-block pt-2 pb-2 px-3 {{ fc }}"><b>{% if dt3['info'] %}{{ dt3['info'] }}{% else %}{{ 'Upcoming' }}{% endif %}</b></span>
+		   {% if dt3['info'] != "" and 'won' not in dt3['info'] and 'Break' not in dt3['info'] %}
+               {% if dt3['score_strip'][0]['currently_batting'] == true %}
+                   <span class="d-block pt-2 pt-2 pb-2 px-3 font_12 bg-light">Current RR: {{ dt3['score_strip'][0]['run_rate'].split(' ')[2] }}</span>
+               {% elif dt3['score_strip'][1]['currently_batting'] == true %}
+                   <span class="d-block pt-2 pt-2 pb-2 px-3 font_12 bg-light">Current RR: {{ dt3['score_strip'][1]['run_rate'].split(' ')[2] }}&nbsp;&nbsp;|&nbsp;&nbsp;Required RR: {{ dt3['score_strip'][0]['required_run_rate'] }}</span>
+               {% endif %}
+             {% endif %}
+
+        <ul class="mb-0 bg-white rounded_bottom px-3 score_tab d-block">
+         <li class="mx-2 d-inline-block"><a class="d-block" href="{{ url_for('main.matchInfo', match=match) }}">Info</a></li>
+		 <li class="mx-2 d-inline-block"><a class="active d-block" href="{{ url_for('main.liveScore', match=match) }}">Live</a></li>
+		 <li class="mx-2 d-inline-block"><a class="d-block" href="{{ url_for('main.scoreCard', match=match) }}">Scorecard</a></li>
 		</ul>
 	    </div>
+      {% if dt3['innings'] | length != 0 %}
 		<div class="live_3 border rounded_10 bg-white mt-3 pt-3">
 		  <div class="table-responsive">
 		    <table class="table font_12 mb-0">
   <thead class="border-0">
-    <tr class="bg-light">
+    <tr class="bg-greenlight">
       <th class="text-muted">BATTERS</th>
       <th class="text-muted">R</th>
       <th class="text-muted">B</th>
@@ -61,22 +84,22 @@
   </thead>
   <tbody>
     <tr>
-      <td><a href="#"><b> Rizwan*</b> (rhb)</a></td>
-      <td><b>16</b></td>
-      <td>32</td>
-      <td>2</td>
-	  <td>0</td>
-	  <td>50.00</td>
+      <td class="text-blue"><b>{{ dt3['now_batting']['b1']['name']~'*' }}</b></td>
+      <td><b>{{ dt3['now_batting']['b1']['stats']['runs'] }}</b></td>
+      <td>{{ dt3['now_batting']['b1']['stats']['balls'] }}</td>
+      <td>{{ dt3['now_batting']['b1']['stats']['fours'] }}</td>
+	  <td>{{ dt3['now_batting']['b1']['stats']['sixes'] }}</td>
+	  <td>{{ dt3['now_batting']['b1']['stats']['strike_rate'] }}</td>
     </tr>
     <tr>
-      <td><b>Salman Agha</b> (rhb)</td>
-      <td><b>0</b></td>
-      <td>0</td>
-      <td>0</td>
-	  <td>0</td>
-	  <td>0.00</td>
+      <td class="text-blue"><b>{{ dt3['now_batting']['b2']['name'] }}</b></td>
+      <td><b>{{ dt3['now_batting']['b2']['stats']['runs'] }}</b></td>
+      <td>{{ dt3['now_batting']['b2']['stats']['balls'] }}</td>
+      <td>{{ dt3['now_batting']['b2']['stats']['fours'] }}</td>
+	  <td>{{ dt3['now_batting']['b2']['stats']['sixes'] }}</td>
+	  <td>{{ dt3['now_batting']['b2']['stats']['strike_rate'] }}</td>
     </tr>
-    <tr class="bg-light">
+    <tr class="bg-greenlight">
       <th class="text-muted">BOWLERS</th>
       <th class="text-muted">O</th>
       <th class="text-muted">M</th>
@@ -85,127 +108,51 @@
 	  <th class="text-muted">Econ</th>
     </tr>
 	<tr>
-      <td><b>Nahid Rana</b> (rf)</td>
-      <td>3.5</td>
-      <td>0</td>
-      <td>17</td>
-	  <td><b>3</b></td>
-	  <td>4.43</td>
+      <td class="text-blue"><b>{{ dt3['now_bowling']['b1']['name']~'*' }}</b></td>
+      <td>{{ dt3['now_bowling']['b1']['stats']['overs'] }}</td>
+      <td>{{ dt3['now_bowling']['b1']['stats']['maiden_overs'] }}</td>
+      <td>{{ dt3['now_bowling']['b1']['stats']['runs'] }}</td>
+	  <td><b>{{ dt3['now_bowling']['b1']['stats']['wickets'] }}</b></td>
+	  <td>{{ dt3['now_bowling']['b1']['stats']['economy'] }}</td>
     </tr>
 	<tr>
-      <td><b>Mehidy Hasan </b> (ob)</td>
-      <td>5</td>
-      <td>0</td>
-      <td>20</td>
-	  <td><b>2</b></td>
-	  <td>4.00</td>
+      <td class="text-blue"><b>{{ dt3['now_bowling']['b2']['name'] }}</b></td>
+      <td>{{ dt3['now_bowling']['b2']['stats']['overs'] }}</td>
+      <td>{{ dt3['now_bowling']['b2']['stats']['maiden_overs'] }}</td>
+      <td>{{ dt3['now_bowling']['b2']['stats']['runs'] }}</td>
+	  <td><b>{{ dt3['now_bowling']['b2']['stats']['wickets'] }}</b></td>
+	  <td>{{ dt3['now_bowling']['b2']['stats']['economy'] }}</td>
     </tr>
   </tbody>
 </table>
 		  </div>
 		</div>
+      {% endif %}
+      {% if dt3['innings'] | length != 0 %}
 		<div class="live_4 border rounded_10 bg-white mt-3 pt-3 pb-3">
 			<span class="d-block px-3 font_14"><b>Overs Stats</b></span>
 		  <hr class="mt-2 mb-2">
+            {% for over in dt3['overs_timeline_v2'] %}
 		  <ul class="mb-0 px-3 fw-bold">
-			<li class="d-inline-block mx-2  mt-1 mb-1 fw-normal font_13">37th</li>
-			  <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">0</li>
-		   <li class="d-inline-block bg-danger text-white rounded-1 text-center me-1 ball mt-1 mb-1">W</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">1Wd</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">0</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">2N</li>
-		    <li class="d-inline-block bg-danger text-white rounded-1 text-center me-1 ball mt-1 mb-1">W</li><br>
-			<li class="d-inline-block mx-2  mt-1 mb-1 fw-normal font_13">36th</li>
-			 <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">0</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">1</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">0</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">0</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">4</li>
-		    <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">0</li><br>
-			<li class="d-inline-block mx-2  mt-1 mb-1 fw-normal font_13">35th</li>
-			 <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">0</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">2</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">4</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">0</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">4</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">2</li><br>
-			  <li class="d-inline-block mx-2  mt-1 mb-1 fw-normal font_13">34th</li>
-			 <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">0</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">1</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">0</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">0</li>
-		   <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">4</li>
-		    <li class="d-inline-block bg-light rounded-1 text-center me-1 ball mt-1 mb-1">0</li><br>
-		  </ul>
+			<li class="d-inline-block mx-1 mt-1 mb-1 fw-bold font_13">{{ num_suffix(over['over'].split('.')[0] | int) }}</li>
+              {% for ball in over['summary'] %}
+              {% if ball == '6' %}
+              <li class="d-inline-block bg-purple text-white rounded-1 text-center ball mt-1 mb-1">{{ ball }}</li>
+              {% elif ball == '4' %}
+              <li class="d-inline-block bg-blue text-white rounded-1 text-center ball mt-1 mb-1">{{ ball }}</li>
+              {% elif ball == 'W' %}
+              <li class="d-inline-block bg-danger text-white rounded-1 text-center ball mt-1 mb-1">{{ ball }}</li>
+              {% else %}
+			  <li class="d-inline-block bg-light rounded-1 text-center ball mt-1 mb-1">{% if ball == 'x' %}{{ '-' }}{% else %}{{ ball }}{% endif %}</li>
+              {% endif %}
+                {% endfor %}
+                <li class="d-inline-block bg-greenlight rounded-1 text-center ball mt-1 mb-1">{{ over["runs"] }}</li>
+          </ul>{% endfor %}
 		</div>
-		<div class="live_5 border rounded_10 bg-white mt-3 pt-3" style="padding-bottom: 20px">
-        <div class="row">
-		 <div class="col pt-2">
-		   <span class="d-block px-3 pt-1 pb-1 bg-light font_13">Match Details</span>
-		   <b class="font_13 d-block mt-2 px-3"><a href="#">Rawalpindi Cricket Stadium</a></b>
-			 <center>
-		   <div class="table-responsive mt-2">
-		    <table class="table font_12 mb-0 align-middle">
-  <tbody>
-    <tr class="border border-end">
-	  <td>Toss</td>
-      <td class="border-start">Bangladesh, elected to field first	</td>
-     </tr>
-	 <tr class="border border-end">
-	  <td>Series</td>
-      <td class="border-start">
-	  <b class="d-block pt-1 pb-1"><a href="#">Bangladesh tour of Pakistan</a></b>
-	 <b class="d-block pt-1 pb-1"><a href="#">ICC World Test Championship</a></b>
-	  	</td>
-     </tr>
-	 <tr class="border border-end">
-	  <td>Season</td>
-      <td class="border-start"><b><a href="#">2024</a></b>	</td>
-     </tr>
-	 <tr class="border border-end">
-	  <td>Match number</td>
-      <td class="border-start"><b><a href="#">Test no. 2549</a></b>	</td>
-     </tr>
-	 <tr class="border border-end">
-	  <td>Hours of play (local time)</td>
-      <td class="border-start">	09.45 start, Lunch 12.00-12.40, Tea 14.55-15.15, Close 17.15</td>
-     </tr>
-	 <tr class="border border-end">
-	  <td>Match days</td>
-      <td class="border-start">	30,31 August, 1,2,3 September 2024 - day (5-day match)</td>
-     </tr>
-	 <tr class="border border-end">
-	  <td>Umpires</td>
-      <td class="border-start">
-	  <b class="d-block pt-1 pb-1"><a href="#">Michael Gough</a></b>
-	 <b class="d-block pt-1 pb-1"><a href="#">Richard Kettleborough</a></b>
-	  	</td>
-     </tr>
-	 <tr class="border border-end">
-	  <td>TV Umpire</td>
-      <td class="border-start"><b><a href="#">Asif Yaqoob</a></b>	</td>
-     </tr>
-	 <tr class="border border-end">
-	  <td>Reserve Umpire</td>
-      <td class="border-start"><b><a href="#">Rashid Riaz</a></b>	</td>
-     </tr>
-	 <tr class="border border-end">
-	  <td>Match Referee</td>
-      <td class="border-start"><b><a href="#">Ranjan Madugalle</a></b>	</td>
-     </tr>
-  </tbody>
-</table>
-		   </div></center>
-		 </div>
-		</div>
-		</div>
+      {% endif %}
+
 	  </div>
 	</div>
-	<!--<div class="col-md-3 ps-2">
-	 <div class="live_right">
-
-	 </div>
-	</div>-->
    </div>
  </div>
 </section>
