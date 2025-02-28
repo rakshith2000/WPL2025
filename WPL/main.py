@@ -21,14 +21,23 @@ full_name = {'DCW':'Delhi Capitals',
              'GG':'Gujarat Giants',
              'MIW':'Mumbai Indians',
              'RCBW':'Royal Challengers Bengaluru',
-             'UPW':'UP Worriorz',
+             'UPW':'UP Warriorz',
              'TBA':'TBA'}
 
-liveTN = {'DCW':'Delhi Capitals Women',
-          'GG':'Gujarat Giants Women',
-          'MIW':'Mumbai Indians Women',
-          'RCBW':'Royal Challengers Bengaluru Women',
-          'UPW':'UP Worriorz'}
+liveTN = {'DCW':['DEL-W','Delhi Capitals Women'],
+          'GG':['GUJ-W','Gujarat Giants Women'],
+          'MIW':['MUM-W','Mumbai Indians Women'],
+          'RCBW':['BLR-W','Royal Challengers Bengaluru Women'],
+          'UPW':['UP-W','UP Warriorz'],
+          'TBA':['TBA','TBA']}
+
+teamID = {127612:['DCW','Delhi Capitals Women'],
+             127613:['GG','Gujarat Giants'],
+             127615:['MIW','Mumbai Indians Women'],
+             127611:['RCBW','Royal Challengers Bengaluru Women'],
+             127614:['UPW','UP Warriorz'],
+             127770:['TBA','TBA'],
+             127775:['TBA','TBA']}
 
 clr = {'DCW':{'c1':'#d71921', 'c2':'#2561ae', 'c3':'#282968'},
         'GG':{'c1':'#ffe338', 'c2':'#e27602', 'c3':'#ff6600'},
@@ -57,6 +66,27 @@ def oversSub(a, b):
 def ovToPer(n):
     return (int(n)+((n-int(n))*10)/6)
 
+def num_suffix(num):
+    if num % 100 in [11, 12, 13]:
+        return str(num) + "th"
+    elif (num % 10) == 1:
+        return str(num) + "st"
+    elif (num % 10) == 2:
+        return str(num) + "nd"
+    elif (num % 10) == 3:
+        return str(num) + "rd"
+    else:
+        return str(num) + "th"
+
+def render_live_URL(tA, tB, mn, dt):
+    teamAB = liveTN[tA][1].replace(" ", "-").lower() + "-vs-" + liveTN[tB][1].replace(" ", "-").lower()
+    if mn.isdigit():
+        matchNo = num_suffix(int(mn)) + "-match"
+    else:
+        matchNo = mn.lower() + "-wpl-2025"
+    dt = dt.strftime("%d-%B-%Y").lower()
+    URL = liveURL_Prefix + teamAB + "-" + matchNo + "-" + dt + liveURL_Suffix
+    return URL
 
 @main.route('/')
 def index():
@@ -171,8 +201,6 @@ def displayFR():
             dtt.append(str(WBy))
             dtt.append(i[7][i[7].index('won'):])
         dt.append(dtt)
-    for j in dt:
-        print(j)
     current_date = datetime.now(tz)
     current_date = current_date.replace(tzinfo=None)
     return render_template('displayFR.html', FR=dt, hint=hint, fn=full_name, current_date=current_date, clr=clr)
@@ -184,8 +212,6 @@ def teams():
 @main.route('/<team>')
 def squad(team):
     sq = Squad.query.filter_by(Team=team).order_by(Squad.Player_ID).all()
-    for i in sq:
-        print(i.Name)
     return render_template('squad.html', team=team, sq=sq, fn=full_name[team], clr=clr[team])
 
 @main.route('/<team>/squad_details/<name>')
@@ -193,50 +219,66 @@ def squad_details(team, name):
     sq = Squad.query.filter_by(Name=name).first()
     return render_template('squad_details.html', sq=sq, clr=clr[team], team=team)
 
-#@main.route('/liveScore')
-#def liveScore():
-#    current_date = date.today()
-#    TodayFR = db.session.execute(text('SELECT * FROM Fixture WHERE date = :current_date'),{'current_date': current_date}).fetchall()
-#    print(TodayFR)
-#    print(len(TodayFR))
-#    if len(TodayFR) != 0:
-#        return render_template('no_live_match.html')
-#    else:
-#        return render_template('live.html')
+@main.route('/match-<match>/matchInfo')
+def matchInfo(match):
+    MatchDT = (db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'), {'matchno': match}).fetchall())[0]
+    MatchURL = render_live_URL(MatchDT[4], MatchDT[5], match, MatchDT[2])
+    response = requests.get(MatchURL)
+    MatchLDT = response.json()
+    MatchDT2 = []
+    MatchDT2.append(num_suffix(int(MatchDT[1]))+" Match" if MatchDT[1].isdigit() else MatchDT[1])
+    MatchDT2.append(MatchDT[6].split(", ")[1])
+    MatchDT2.append(num_suffix(MatchDT[2].day)+" "+MatchDT[2].strftime("%B %Y"))
+    return render_template('info.html', match=match, dt1=MatchDT, dt2=MatchDT2, dt3=MatchLDT, tid=teamID)
 
-@main.route('/liveScore')
-def liveScore():
-    return render_template('maintenance.html')
+@main.route('/match-<match>/liveScore')
+def liveScore(match):
+    MatchDT = (db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'),{'matchno': match}).fetchall())[0]
+    MatchURL = render_live_URL(MatchDT[4], MatchDT[5], match, MatchDT[2])
+    response = requests.get(MatchURL)
+    MatchLDT = response.json()
+    MatchDT2 = []
+    MatchDT2.append(num_suffix(int(MatchDT[1])) + " Match" if MatchDT[1].isdigit() else MatchDT[1])
+    MatchDT2.append(MatchDT[6].split(", ")[1])
+    MatchDT2.append(num_suffix(MatchDT[2].day) + " " + MatchDT[2].strftime("%B %Y"))
+    return render_template('live.html', match=match, dt1=MatchDT, dt2=MatchDT2, dt3=MatchLDT, tid=teamID)
 
-#API_URL = 'https://cmc2.sportskeeda.com/live-cricket-score/victoria-lions-vs-southern-crusaders-cc-29th-match-15-february-2025/ajax'
+@main.route('/match-<match>/scoreCard')
+def scoreCard(match):
+    MatchDT = (db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'), {'matchno': match}).fetchall())[0]
+    MatchURL = render_live_URL(MatchDT[4], MatchDT[5], match, MatchDT[2])
+    response = requests.get(MatchURL)
+    MatchLDT = response.json()
+    MatchDT2 = []
+    MatchDT2.append(num_suffix(int(MatchDT[1])) + " Match" if MatchDT[1].isdigit() else MatchDT[1])
+    MatchDT2.append(MatchDT[6].split(", ")[1])
+    MatchDT2.append(num_suffix(MatchDT[2].day) + " " + MatchDT[2].strftime("%B %Y"))
+    return render_template('scorecard.html', match=match, dt1=MatchDT, dt2=MatchDT2, dt3=MatchLDT, tid=teamID)
 
-'''def fetch_live_score():
-    try:
-        # Fetch the live score JSON from the API URL
-        response = requests.get(API_URL)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return {"error": "Failed to fetch live score"}
-    except Exception as e:
-        return {"error": str(e)}'''
+@main.route('/match-<match>/FRScore')
+def FRScore(match):
+    MatchFR = db.session.execute(text('SELECT * FROM Fixture WHERE "Match_No" = :matchno'),
+                                 {'matchno': match}).fetchall()
+    MatchFR = MatchFR[0]
+    matchDT = datetime.combine(MatchFR.Date, MatchFR.Time)
+    current_date = datetime.now(tz)
+    current_date = current_date.replace(tzinfo=None)
 
-#@main.route('/live_cricket_score')
-#def live_cricket_score():
-#    def stream():
-#        while True:
-#            if request.environ.get('wsgi.input').closed:
-#                print("Client disconnected")
-#                break
-#            data = fetch_live_score()
-#            yield f"data: {json.dumps(data)}\n\n"
-#            time.sleep(5)
+    if current_date < (matchDT - timedelta(minutes=30)):
+        return redirect(url_for('main.matchInfo', match=match))
+    elif current_date >= (matchDT - timedelta(minutes=30)) and MatchFR[10] is None:
+        return redirect(url_for('main.liveScore', match=match))
+    elif MatchFR[10] is not None:
+        return redirect(url_for('main.scoreCard', match=match))
 
-#    return Response(stream_with_context(stream()), mimetype='text/event-stream')
-
-#@main.route('/liveScore')
-#def liveScore():
-#    return render_template('scorecard-1.html')
+@main.route('/todayMatch')
+def todayMatch():
+    current_date = datetime.now(tz).replace(tzinfo=None).date()
+    TodayFR = db.session.execute(text('SELECT * FROM Fixture WHERE "Date" = :current_date'),{'current_date': current_date}).fetchall()
+    if len(TodayFR) == 0:
+        return render_template('no_live_match.html')
+    else:
+        return redirect(url_for('main.FRScore', match=TodayFR[0][1]))
 
 @main.route('/update')
 @login_required
