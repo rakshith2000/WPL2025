@@ -2,7 +2,11 @@
 <link rel="stylesheet" href="{{ url_for('static', filename= 'extended_beauty.css') }}"/>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fixtures.css') }}">
 <style>
-
+.plain-link {
+  text-decoration: none !important; /* Removes underline */
+  color: inherit;        /* Keeps color same as surrounding text */
+  cursor: pointer;       /* Normal text cursor */
+}
 </style>
 {% endblock %}
 
@@ -41,6 +45,7 @@
 <div style="padding-bottom: 40px;"></div>
 {% for i in FR[1:] %}
 {% if i[1] > current_date %}
+<a href="{{ url_for('main.FRScore', match=i[0]) }}" class="plain-link">
 <div class="main-container">
   <div class="score-card">
     <div class="header">{{ i[1].strftime('%a, %d %b %Y') }}</div>
@@ -91,9 +96,10 @@
     </div>
 </div>
   </div>
-</div>
+</div></a>
 
 {% elif i[1] <= current_date and i[7] == 'TBA' %}
+    <a href="{{ url_for('main.FRScore', match=i[0]) }}" class="plain-link">
 <div class="main-container">
   <div class="score-card">
     <div class="header">{{ i[1].strftime('%a, %d %b %Y') }}</div>
@@ -129,14 +135,15 @@
 		<img class="team-image" style="--c1: {{ clr[i[4]]['c1'] }}; --c2: {{ clr[i[4]]['c2'] }};" src="\static\images\squad_logos\{{ i[4] }}.webp" alt="Team Logo" />
 </div>
   </div>
-</div>
+</div></a>
 
 {% elif i[7] != 'TBA' %}
+    <a href="{{ url_for('main.FRScore', match=i[0]) }}" class="plain-link">
 <div class="main-container">
   <div class="score-card">
     <div class="header">{{ i[1].strftime('%a, %d %b %Y') }}</div>
     <div class="match-info">{% if i[0] | int(default=None) is not none%}{{ num_suffix(i[0] | int) ~ " " ~ "Match" }}{% else %}{{ i[0] }}{% endif %} &bull; {{ i[2] }}</div>
-      {% if 'Super over' not in i[10] %}
+    {% if 'Super over' not in i[10] %}
       {% if i[7] == i[3] and i[8] == "runs" %}
       {% set TA, TB, TA_S, TB_S = i[3], i[4], i[5], i[6] %}
       {% elif i[7] == i[3] and i[8] == "wickets" %}
@@ -191,7 +198,7 @@
 </div>
       <div class="result" style="width: 80%;">{{ fn[i[7]] }} {{ i[10] }}</div>
   </div>
-  </div>
+</div></a>
 {% endif %}
 {% endfor %}
 </center>
