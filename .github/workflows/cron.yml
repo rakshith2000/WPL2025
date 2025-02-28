@@ -9,4 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping My App
-        run: curl -X GET https://tatawpl2025.onrender.com
+        run: curl -X GET https://tata-wpl2025.onrender.com
